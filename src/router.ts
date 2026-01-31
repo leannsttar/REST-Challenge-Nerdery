@@ -1,10 +1,10 @@
-import express, { Router } from 'express'
+import { Router } from 'express'
 import { authRoutes } from './routes/auth.route'
 
-const expressRouter = express.Router()
+export function router(): Router {
+  const router = Router()
 
-export function router(app: Router): Router {
-  app.use('/api/v1/auth', authRoutes())
+  router.use('/api/v1/auth', authRoutes())
 
-  return expressRouter
+  return router
 }
