@@ -14,6 +14,6 @@ export class UserDto {
   @Expose()
   readonly role!: string
 
-  @Expose()
+  @Exclude()
   readonly password!: string
 }

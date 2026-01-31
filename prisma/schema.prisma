@@ -13,12 +13,26 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum Role {
+  ADMIN
+  CLIENT
+}
+
 model User {
-  id                 Int     @id @default(autoincrement())
-  email              String  @unique
+  id                 Int      @id @default(autoincrement())
+  email              String   @unique
   name               String
   password           String
-  role               String
-  authToken          String? @map("auth_token")
-  resetPasswordToken String? @map("reset_password_token")
+  role               Role
+  resetPasswordToken String?  @map("reset_password_token")
+  createdAt          DateTime @default(now()) @map("created_at")
+
+  @@map("users")
+}
+
+model revokedTokens {
+  id                Int    @id @default(autoincrement())
+  token             String @unique
+
+  @@map("revoked_tokens")
 }
