@@ -3,6 +3,8 @@ import jwt, { JwtPayload } from "jsonwebtoken";
 import { AuthService } from "../services/auth.service";
 import { AuthenticatedRequest } from "../types/auth-request";
 
+import { config } from "../config/env.config";
+
 export const authenticateJWT = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
   const authHeader = req.headers.authorization;
 
@@ -24,7 +26,7 @@ export const authenticateJWT = async (req: AuthenticatedRequest, res: Response, 
   try {
     const decoded = jwt.verify(
       token,
-      process.env.JWT_SECRET || "secret"
+      config.jwt.secret
     ) as JwtPayload;
 
     req.user = decoded;

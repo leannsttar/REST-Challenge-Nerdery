@@ -18,7 +18,7 @@ export class SignUpDto {
         minNumbers: 1,   
         minSymbols: 1       
     }, {
-        message: "La contraseña es muy débil. Debe tener al menos 8 caracteres, una mayúscula, una minúscula, un número y un símbolo."
+        message: "The password is too weak. It must be at least 8 characters long and contain one uppercase letter, one lowercase letter, one number, and one symbol"
     })
     readonly password!: string;
 }

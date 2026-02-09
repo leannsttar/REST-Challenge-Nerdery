@@ -5,6 +5,7 @@ import { plainToInstance } from "class-transformer";
 import { UserDto } from "../dtos/auth/responses/user.dto";
 import { Conflict, Unauthorized } from "http-errors";
 import createError from "http-errors";
+import { config } from "../config/env.config";
 
 import prisma from "../prisma";
 import bcrypt from "bcrypt";
@@ -17,7 +18,7 @@ export class AuthService {
   private static generateToken(userId: number, email: string): string {
     return jwt.sign(
       { id: userId, email }, 
-      process.env.JWT_SECRET || 'secret', 
+      config.jwt.secret, 
       { expiresIn: '1h' }
     );
   }
@@ -80,7 +81,7 @@ export class AuthService {
     const found = await prisma.revokedTokens.findUnique({
       where: { token },
     });
-    return found ? true : false; 
+    return !!found; 
   }
 
   static async forgotPassword(email: string): Promise<string>{
@@ -94,7 +95,7 @@ export class AuthService {
 
     const resetToken = jwt.sign(
       { sub: user.id, type: "reset"},
-      process.env.JWT_SECRET || "secret",
+      config.jwt.secret,
       {expiresIn: "15m"}
     )
 
@@ -122,7 +123,7 @@ export class AuthService {
     try {
       decoded = jwt.verify(
         token,
-        process.env.JWT_SECRET || "secret"
+        config.jwt.secret
       ) as JwtPayload;
     } catch (err) {
       throw createError.BadRequest("Invalid or expired token");
@@ -132,7 +133,7 @@ export class AuthService {
       throw createError.BadRequest("Invalid token type");
     }
 
-    const userId = Number(decoded.sub);
+    const userId = decoded.sub;
 
     const user = await prisma.user.findUnique({
       where: { id: userId },
